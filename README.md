@@ -1,0 +1,1 @@
+Takes an array of db_name values and creates each of them.

@@ -1,7 +1,10 @@
-bash "Creating database" do
-  not_if("/usr/bin/mysql -uroot -p#{node[:mysql][:server_root_password]} -e'show databases' | grep #{node[:mysql_create_database][:db_name]}", :user => 'root')
-  user "root"
-  code <<-EOM
-    mysql -uroot -p#{node[:mysql][:server_root_password]} -e 'create database #{node[:mysql_create_database][:db_name]}'
-  EOM
+db_names = node[:mysql_create_database][:db_name]
+db.names.each do |db_name|
+  bash "Creating database #{node[:mysql_create_database][:db_name]}" do
+    not_if("/usr/bin/mysql -uroot -p#{node[:mysql][:server_root_password]} -e'show databases' | grep #{db_name}", :user => 'root')
+    user "root"
+    code <<-EOM
+      mysql -uroot -p#{node[:mysql][:server_root_password]} -e 'create database #{db_name}'
+    EOM
+  end
 end
